@@ -167,3 +167,72 @@ g_x = np.linspace(norm.ppf(0.01, mu2, sigma2), norm.ppf(0.99, mu2, sigma2), 100)
 ax2.plot(g_x, norm.pdf(g_x, mu2, sigma2), "r-", lw=5, alpha=0.6, label="norm pdf")
 ax2.set_title("mean radius diagnosis = No")
 #
+
+
+# ---------------------------------------------
+
+
+data = pd.read_csv(
+    r"G:\Il mio Drive\1Master Data Analytics and data science\lezioni_MDA\data analysis\codice\dp-export-414127.csv"
+)  # data from local file, only 4 columns
+
+df_train, df_test = train_test_split(data, test_size=0.2, random_state=41)
+df_train
+df_test
+
+num = len(df_train[df_train.diagnosis == 1])
+den = len(df_train.diagnosis)
+
+prior = num / den
+prior
+
+import numpy as np
+
+# x = 0.6
+media = np.mean(df_train["mean radius"])
+devstd = np.std(df_train["mean radius"])
+
+x = 18
+# media = 0
+# dev = 1
+(x - media) / devstd
+
+
+gauss = (
+    1 / (devstd * np.sqrt(2 * np.pi)) * np.exp(-(1 / 2) * ((x - media) / devstd) ** 2)
+)
+gauss
+
+gauss = 1 / (np.sqrt(2 * np.pi * (devstd ** 2))) * ((x - media) ** 2 / 2 * devstd ** 2)
+
+
+gauss = (
+    1 / (np.sqrt(2 * np.pi * (devstd ** 2))) * (-1 / 2 * (x - media) ** 2 / devstd ** 2)
+)
+
+gauss * 1.65
+
+mu = np.mean(df_train["mean radius"])
+devstd = np.std(df_train["mean radius"])
+
+x = 18
+gaussian = 1 / (devstd * np.sqrt(2 * np.pi) * np.exp(-1 / 2 * (x - mu / devstd)))
+gaussian
+
+z = 0
+mu = 0
+devstd = 1
+
+z = (z - mu) / devstd
+norm = 1 / (np.sqrt(2 * np.pi)) * np.exp(-1 / 2 * z ** 2)
+
+1 - norm
+
+c=75
+mu=72
+devstd=6
+z = (c - mu )/ devstd
+z
+
+norm = 1 / (np.sqrt(2 * np.pi)) * np.exp((-1 / 2 )* z ** 2)
+1- norm
