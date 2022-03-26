@@ -4,10 +4,10 @@ Data Analysis Bayes - Hypothesis Testing
 # Status del progetto
 
 Implementation of:
-- Work in progress
+- Bayes , Work in progress
 
 
 ## Dipendenze
 - Numpy 
 - Pandas 
-- Plotly
+
