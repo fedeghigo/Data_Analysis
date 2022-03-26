@@ -180,7 +180,7 @@ df_train, df_test = train_test_split(data, test_size=0.2, random_state=41)
 df_train
 df_test
 
-num = len(df_train[df_train.diagnosis == 1])
+num = sum(df_train[df_train.diagnosis == 1]["mean radius"])
 den = len(df_train.diagnosis)
 
 prior = num / den
@@ -228,11 +228,12 @@ norm = 1 / (np.sqrt(2 * np.pi)) * np.exp(-1 / 2 * z ** 2)
 
 1 - norm
 
-c=75
-mu=72
-devstd=6
-z = (c - mu )/ devstd
+c = 75
+mu = 72
+devstd = 6
+z = (c - mu) / devstd
 z
 
-norm = 1 / (np.sqrt(2 * np.pi)) * np.exp((-1 / 2 )* z ** 2)
-1- norm
+norm = 1 / (np.sqrt(2 * np.pi)) * np.exp((-1 / 2) * z ** 2)
+1 - norm
+
