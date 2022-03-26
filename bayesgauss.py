@@ -14,8 +14,8 @@ class BayesGaussian(object):
         self.x_test = x_test
         self.y_test = y_test
 
-    def _calc_class_prior(self):
-        outcome_count = sum(self.y_train == 1)
+    def _calc_class_prior(self, test_value=1):
+        outcome_count = sum(self.y_train == test_value)
         self.class_priors = outcome_count / len(self.y_train)
         return self.class_priors
 
@@ -46,16 +46,22 @@ class BayesGaussian(object):
         exponent = np.exp(-((x - mean) ** 2 / (2 * stdev ** 2)))
         return (1 / (np.sqrt(2 * np.pi) * stdev)) * exponent
 
-    def bayes(self, n):
-        # self.y_test["predicted"] = []
+    def likelihood_list(self, columns=0):
+        self.likelihood_computed = []
+        for i in range(len(self.x_test)):
+            temp = self.calculate_probability(
+                self.x_test.iloc[i, columns],
+                self.calculated_mean[columns],
+                self.calculated_std[columns],
+            )
+            self.likelihood_computed.append(temp)
+        return self.likelihood_computed
+
+    def bayes(self, columns=0):
         y_computed = []
         for i in range(len(self.x_test)):
-
-            temp = self.calculate_probability(
-                self.x_test.iloc[i, n], self.calculated_mean[n], self.calculated_std[n],
-            )
-            num = temp * self.class_priors
-            den = temp + self.class_priors
+            num = self.likelihood_computed[i] * self.class_priors
+            den = sum(self.likelihood_computed) + self.class_priors
             bayes = num / den
             y_computed.append(bayes)
         return y_computed
