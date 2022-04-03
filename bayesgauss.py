@@ -77,118 +77,51 @@ class BayesGaussian(object):
         return self.likelihood_computed #self.likelihood_computed
     
     def single_likelihood(self, df ):
-        mul_likelihood = df.prod(axis=1) 
+        mul_likelihood = self.likelihood_list(df).prod(axis=1) 
         return mul_likelihood
         
     def bayes_classification(self):
-        y_computed = []
+        self.y_computed = []
         likeli = np.array(self.single_likelihood(self.x_train_1))
         likeli_0 =np.array(self.single_likelihood(self.x_train_0))
         for i in range(len(self.x_test)-1):
             num=likeli[i] * self.class_priors
-            den=likeli[i]*self.class_priors + likeli_0[i]*self._calc_class_prior(test_value=0) 
-            bayes=num/den
-            y_computed.append(bayes)
-        return y_computed
+            self.den=likeli[i]*self.class_priors + likeli_0[i]*self._calc_class_prior(test_value=0) 
+            bayes=num/self.den
+            self.y_computed.append(bayes)
+        return self.y_computed
     
-    def summary_bayes_classification(self):
-        print("...... Mean.......")
+    def normalize_data(self, threshold=0.5):
+        self.pred=pd.Series(self.y_computed)
+        self.pred[self.pred>=threshold]=1
+        self.pred[self.pred<threshold]=0
+        return self.pred
+        
+        
+    def summary_bayes_classification(self,threshold=0.5):
+        print("...... Mean .......")
         print("Train 1",self.mean(self.x_train_1) )
         print("Train 0",self.mean(self.x_train_0) )
-        print("...... Std.......")
+        
+        print("...... Std .......")
         print("Train 1",self.stdev(self.x_train_1) )
         print("Train 0",self.stdev(self.x_train_0) )
-        print("...... Prior.......")
+        
+        print("...... Prior .......")
         print("Train 1",self._calc_class_prior(test_value=1))
         print("Train 0",self._calc_class_prior(test_value=0))  
-        print("...... Likelihood.......")
+        
+        print("...... Likelihood .......")
         print("Train 1",self.single_likelihood(self.x_train_1 ))
-        print("Train 0",self.single_likelihood(self.x_train_0 ))
+        print("Train 0",self.single_likelihood(self.x_train_0))
+        print("...... Normalization .......")
+        print("Norm:",self.den)
+        
+        print("...... Result .......")
+        print("Result:",self.y_computed)
+        
+        print("...... Metrics .......")
+        #print(self.normalize_data(threshold=threshold))
+        print("Accuracy",accuracy_score(self.y_test["diagnosis"][:-1], self.normalize_data(threshold=threshold)))
         
         
-    # def bayes(self, columns=0):
-    #     y_computed = []
-    #     for i in range(len(self.x_test)):
-    #         num = self.likelihood_computed[i] * self.class_priors
-    #         den = sum(self.likelihood_computed) + self.class_priors
-    #         bayes = num / den
-    #         y_computed.append(bayes)
-    #     return y_computed
-    
-
-    # def likelihood(self):
-    #     self.likelihood_list = []
-    #     for i in self.x_train.iloc[:, 0]:
-    #         likelihood = self.calculate_probability(
-    #             i, self.calculated_mean[0], self.calculated_std[0]
-    #         )
-    #         self.likelihood_list.append(likelihood)
-    #     return self.likelihood_list
-
-    # def bayes(self, df, priors, likelihood):
-    #     for i in df:
-    #         bayes = priors * likelihood / sum(priors * likelihood)
-    #     return bayes
-
-    # def gaussian(self, x: list):
-    #     t = pd.DataFrame()
-    #     for i in range(len(self.x_train.columns) - 1):
-    #         exponent = np.exp(-((x - self.mean()) ** 2 / (2 * self.stdev() ** 2)))
-    #         norm = 1 / (np.sqrt(2 * np.pi) * self.stdev()) * exponent
-    #     return norm
-
-    # def gaussian( x , self.mean(), self.stdev() ):
-
-    #     for i in len(self.x_train.columns):
-    #         exponent = np.exp(-((x[i]-self.mean())[i]**2 / (2 * self.stdev()[i]**2 )))
-    #     return (1 / (sqrt(2 * np.pi) * self.stdev()[i])) * exponent
-
-
-#     def gauss_dist(self):
-#         gaussian = 1 / (
-#             self.devstd
-#             * np.sqrt(2 * np.pi)
-#             * np.exp(-1 / 2 * (self.x - self.mu / self.devstd))
-#         )
-#         return gaussian
-
-#     def norm_gauss(self):
-#         z = c - mu / devstd
-#         norm = 1 / (np.sqrt(2 * np.pi)) * np.exp(-1 / 2 * z ** 2)
-#         return norm
-
-#     def norm_gauss_complementare(self):
-#         z = c - mu / devstd
-#         norm = 1 / (np.sqrt(2 * np.pi)) * np.exp(-1 / 2 * z ** 2)
-#         return 1 - norm
-#     def prob(self):
-#         z = c - mu / devstd
-#         return z
-
-
-# class NaiveBayes:
-#     def __init__(self, features: pd.DataFrame, label: pd.Series) -> None:
-#         self.features = features
-#         self.label = label
-#         # self.prior=prior
-
-#     def likelihood(self):
-#         pass
-
-#     def prior(self):
-#         _num = len(self.label[self.label == 1])
-#         _den = len(self.label)
-
-#     def normalization(self):
-#         pass
-
-#     def Bayes(self):
-#         pass
-
-#     def IterateBayes(self):
-#         pass
-
-
-# # nb =NaiveBayes()
-
-#f
