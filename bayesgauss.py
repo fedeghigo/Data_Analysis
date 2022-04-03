@@ -4,7 +4,7 @@ from queue import Empty
 from typing import List
 import pandas as pd
 import numpy as np
-
+from sklearn.metrics import accuracy_score
 
 class BayesGaussian(object):
     def __init__(self,df,  x_train, y_train, x_test, y_test) -> None:
@@ -90,16 +90,31 @@ class BayesGaussian(object):
             bayes=num/den
             y_computed.append(bayes)
         return y_computed
+    
+    def summary_bayes_classification(self):
+        print("...... Mean.......")
+        print("Train 1",self.mean(self.x_train_1) )
+        print("Train 0",self.mean(self.x_train_0) )
+        print("...... Std.......")
+        print("Train 1",self.stdev(self.x_train_1) )
+        print("Train 0",self.stdev(self.x_train_0) )
+        print("...... Prior.......")
+        print("Train 1",self._calc_class_prior(test_value=1))
+        print("Train 0",self._calc_class_prior(test_value=0))  
+        print("...... Likelihood.......")
+        print("Train 1",self.single_likelihood(self.x_train_1 ))
+        print("Train 0",self.single_likelihood(self.x_train_0 ))
         
         
-    def bayes(self, columns=0):
-        y_computed = []
-        for i in range(len(self.x_test)):
-            num = self.likelihood_computed[i] * self.class_priors
-            den = sum(self.likelihood_computed) + self.class_priors
-            bayes = num / den
-            y_computed.append(bayes)
-        return y_computed
+    # def bayes(self, columns=0):
+    #     y_computed = []
+    #     for i in range(len(self.x_test)):
+    #         num = self.likelihood_computed[i] * self.class_priors
+    #         den = sum(self.likelihood_computed) + self.class_priors
+    #         bayes = num / den
+    #         y_computed.append(bayes)
+    #     return y_computed
+    
 
     # def likelihood(self):
     #     self.likelihood_list = []
