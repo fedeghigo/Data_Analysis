@@ -46,25 +46,44 @@ class BayesGaussian(object):
         exponent = np.exp(-((x - mean) ** 2 / (2 * stdev ** 2)))
         return (1 / (np.sqrt(2 * np.pi) * stdev)) * exponent
 
-    def likelihood_list(self, columns=0):
-        self.likelihood_computed = []
-        for i in range(len(self.x_test)):
-            temp = self.calculate_probability(
-                self.x_test.iloc[i, columns],
-                self.calculated_mean[columns],
-                self.calculated_std[columns],
-            )
-            self.likelihood_computed.append(temp)
-        return self.likelihood_computed
 
+    def likelihood_list(self, columns=0):
+        self.likelihood_computed = pd.DataFrame()
+        concat=pd.DataFrame() 
+        #likeli=pd.DataFrame()  
+        tt=pd.DataFrame()
+        for i in range(len(self.x_test)):
+            concat=pd.DataFrame()  
+            for col in  range(len(self.x_test.columns)):                 
+                temp = self.calculate_probability(
+                self.x_test.iloc[i, col],
+                self.calculated_mean[col],
+                self.calculated_std[col],
+                )            
+                likeli =pd.Series(temp)
+                concat = pd.concat([concat,likeli], axis=1)
+            self.likelihood_computed= pd.concat([concat,self.likelihood_computed], axis=0)
+        return self.likelihood_computed #self.likelihood_computed
+ 
+      
+    def inverse_likelihood(self):
+        self.inverse=1- self.likelihood_computed.prod(axis=1) 
+        #self.inverse_likelihood = 1 - self.likelihood_row
+        return self.inverse  #self.inverse_likelihood 
+        
     def bayes(self, columns=0):
         y_computed = []
-        for i in range(len(self.x_test)):
-            num = self.likelihood_computed[i] * self.class_priors
-            den = sum(self.likelihood_computed) + self.class_priors
-            bayes = num / den
-            y_computed.append(bayes)
-        return y_computed
+        posterior =   self.likelihood_computed.prod(axis=1)
+        num = posterior * self.class_priors
+        den = posterior * self._calc_class_prior( test_value=1) +  self.inverse_likelihood() * self._calc_class_prior( test_value=0)
+        self.bayes_return= num/den*100
+        return  self.bayes_return
+    
+
+            
+
+
+
 
     # def likelihood(self):
     #     self.likelihood_list = []
