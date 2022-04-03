@@ -1,10 +1,10 @@
 # Data_analysis
-Data Analysis Bayes - Hypothesis Testing  
+Data Analysis Bayes
 
 # Status del progetto
 
 Implementation of:
-- Bayes , Work in progress
+- Naive Bayes Classification
 
 
 ## Dipendenze
