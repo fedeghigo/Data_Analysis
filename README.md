@@ -10,4 +10,5 @@ Implementation of:
 ## Dipendenze
 - Numpy 
 - Pandas 
+- sklearn
 
