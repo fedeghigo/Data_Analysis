@@ -67,7 +67,7 @@ class BayesGaussian(object):
  
       
     def inverse_likelihood(self):
-        self.inverse=1- self.likelihood_computed.prod(axis=1) 
+        self.inverse=1 - self.likelihood_computed.prod(axis=1) 
         #self.inverse_likelihood = 1 - self.likelihood_row
         return self.inverse  #self.inverse_likelihood 
         
