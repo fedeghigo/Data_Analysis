@@ -121,7 +121,6 @@ class BayesGaussian(object):
         print("Result:",self.y_computed)
         
         print("...... Metrics .......")
-        #print(self.normalize_data(threshold=threshold))
         print("Accuracy",accuracy_score(self.y_test["diagnosis"][:-1], self.normalize_data(threshold=threshold)))
         
         
